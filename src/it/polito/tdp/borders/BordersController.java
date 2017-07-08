@@ -5,9 +5,11 @@
 package it.polito.tdp.borders;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.borders.model.Country;
 import it.polito.tdp.borders.model.CountryAndNum;
 import it.polito.tdp.borders.model.Model;
 import javafx.event.ActionEvent;
@@ -30,7 +32,7 @@ public class BordersController {
     private TextField txtAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxNazione"
-    private ComboBox<?> boxNazione; // Value injected by FXMLLoader
+    private ComboBox<Country> boxNazione; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
@@ -71,12 +73,40 @@ public class BordersController {
     	for(CountryAndNum cn : stati)
     		txtResult.appendText(String.format("%s: %d\n", cn.getCountry().toString(), cn.getNum()));
     	
+    	// popolo la tendina con le Country correnti
+    	
+    	boxNazione.getItems().clear();
+    	
+    	for(CountryAndNum cn : stati)
+    		boxNazione.getItems().add(cn.getCountry());
+    	
+    	Collections.sort(boxNazione.getItems());
+    	
     	return;
 
     }
 
     @FXML
     void doSimula(ActionEvent event) {
+    	
+    	txtResult.clear();
+    	Country partenza = boxNazione.getValue();
+    	
+    	if(partenza==null){
+    		txtResult.appendText("ERRORE: Selezionare una nazione.\n");
+    	}
+    	
+    	int passi = model.simula(partenza);
+    	
+    	List<CountryAndNum> stanziali = model.getStanziali();
+    	
+    	// stampo risultati
+    	
+    	txtResult.appendText("SIMULATI "+passi+" PASSI.\n");
+    	
+    	for(CountryAndNum cn : stanziali){
+    		txtResult.appendText(String.format("%s: %d\n", cn.getCountry().toString(), cn.getNum()));
+    	}
 
     }
 

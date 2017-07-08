@@ -18,6 +18,7 @@ public class Model {
 	private UndirectedGraph<Country, DefaultEdge> graph;
 	List<Country> countries;
 	Map<Integer, Country> countryMap;
+	List<CountryAndNum> stanziali;
 	
 	public Model(){
 		super();
@@ -91,6 +92,24 @@ public class Model {
 			System.out.format("%s: %d\n", cn.getCountry().toString(), cn.getNum());
 		}
 		
+	}
+
+	public int simula(Country partenza) {
+		
+		Simulator simulator = new Simulator(this.graph);
+		
+		simulator.inserisci(partenza);
+		
+		simulator.run();
+		
+		this.stanziali = simulator.getPresenti();
+		
+		return simulator.getPassi();
+		
+	}
+	
+	public List<CountryAndNum> getStanziali(){
+		return this.stanziali;
 	}
 
 }
